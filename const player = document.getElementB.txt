@@ -1,0 +1,51 @@
+const player = document.getElementById("player");
+const road = document.getElementById("road");
+
+let playerPosition = 175;
+let speed = 5;
+
+document.addEventListener("keydown", moveCar);
+
+function moveCar(e) {
+    if (e.key === "ArrowLeft" && playerPosition > 0) {
+        playerPosition -= 20;
+    }
+    if (e.key === "ArrowRight" && playerPosition < 350) {
+        playerPosition += 20;
+    }
+    player.style.left = playerPosition + "px";
+}
+
+// Create enemy cars
+function createEnemy() {
+    let enemy = document.createElement("div");
+    enemy.style.width = "50px";
+    enemy.style.height = "100px";
+    enemy.style.background = "blue";
+    enemy.style.position = "absolute";
+    enemy.style.left = Math.floor(Math.random() * 350) + "px";
+    enemy.style.top = "0px";
+
+    road.appendChild(enemy);
+
+    let enemyMove = setInterval(() => {
+        let enemyTop = parseInt(enemy.style.top);
+        enemy.style.top = enemyTop + speed + "px";
+
+        // Collision detection
+        if (
+            enemyTop > 480 &&
+            parseInt(enemy.style.left) === playerPosition
+        ) {
+            alert("Game Over!");
+            location.reload();
+        }
+
+        if (enemyTop > 600) {
+            enemy.remove();
+            clearInterval(enemyMove);
+        }
+    }, 30);
+}
+
+setInterval(createEnemy, 2000);
